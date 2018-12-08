@@ -1,0 +1,45 @@
+<html>
+<head></head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="./node_modules/flv.js/dist/flv.min.js"></script>
+    <div>
+        <video id="flvVideo" autoplay></video>
+        <input type="text" id="flvUrlInput">
+        <button id="urlSubmit">Load</button>
+        <p>To find the flv url, please follow api https://api.live.bilibili.com/api/playurl?platform=web&amp;otype=json&amp;cid=roomId&amp;_=Date.now()</p>
+    </div>
+    <script>
+        let player;
+        let video = $('#flvVideo')[0];
+        function load(url) {
+            if (flvjs.isSupported()) {
+                if(player) {
+                    player.detachMediaElement();
+                    delete player;
+                }
+                player = flvjs.createPlayer({
+                    type: 'flv',
+                    isLive: true,
+                    hasVideo: true,
+                    hasAudio: true,
+                    url: url
+                }, {
+                    isLive: true
+                });
+                player.attachMediaElement(video);
+                try {
+                    player.load();
+                    player.play();
+                } catch(err) {
+                    console.log(err);
+                }
+            }
+        }
+        $('#urlSubmit').bind('click', () => {
+            let url = $('#flvUrlInput').val();
+            load(url);
+        });
+    </script>
+</body>
+</html>
